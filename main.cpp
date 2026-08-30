@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Matrix2x2.h"
+#include "Matrix.h"
 
 
 
@@ -22,7 +22,7 @@ int main(){
     
     std::cout << "Fill your matrix: " << '\n';
     
-    mat.FillMat();
+    
     
 
 

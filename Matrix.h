@@ -1,11 +1,11 @@
-#ifndef MATRIX2x2_H
-#define MATRIX2x2_H
+#ifndef MATRIX_H
+#define MATRIX_H
 
 #include <vector>
 #include <iostream>
 
 template <typename T>
-class Matrix2x2 {
+class Matrix {
 private:
     static int rows;
     static int cols;
