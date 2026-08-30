@@ -11,6 +11,7 @@ if you wanna clone this project type in the terminal
 - ***Addition ,Substraction and Matrix Multiplcation by scalar or by other Matrix***
 - ***Determinant operator***
 - ***Transpose operator***
-##What Features are not implemented yet
+
+## What Features are not implemented yet
 - ***Inverse Matrix***
 - ***Adjoint Matrix** 
