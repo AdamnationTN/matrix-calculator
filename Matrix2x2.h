@@ -1,7 +1,7 @@
 #ifndef MATRIX2x2_H
 #define MATRIX2x2_H
 
-#include <array>
+#include <vector>
 #include <iostream>
 
 template <typename T>
@@ -21,10 +21,6 @@ public:
         
     }
 
-    // Const and Non-Const Accessors
-    std::vector<std::vector<T>>& getMat() const {
-        return this->matrix;
-    }
     //getting rows
     int getRow() const{
         return this->rows;
@@ -55,7 +51,7 @@ public:
         }
     }
 
-    // Addition
+    // Matrix Addition
     Matrix2x2 operator+(const Matrix2x2& rightOp) const {
         Matrix2x2 temp;
         for (int i = 0; i < rows; i++) {
