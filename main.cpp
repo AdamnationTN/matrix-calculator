@@ -3,21 +3,27 @@
 
 
 
-
 int main(){
-    Matrix2x2<int> M1;
-    Matrix2x2<int> M2;
-    M1.FillMat();
-    M2.FillMat();
+    char choice,choice1;
+    int rows, cols;
+
+    std::cout << "Please choose the data type of Matrix you want to create :\n";
+    std::cout << "A. Int\n";
+    std::cout << "B. float\n";
+    std::cout << "C. double\n";
+
+    std::cin >> choice;
+    std::cout << "Please choose the size of Matrix you want to create :\n";
+    std::cout << "A.2x2\n";
+    std::cout << "B.3x3\n";
+    std::cin >> choice1;
     
-    Matrix2x2<int> res;
-    res = M1 + M2;
-    for(int i = 0; i < 2; i++){
-        for(int j = 0; j < 2 ; j++){
-            std::cout << res.getMat()[i][j] << ' ';
-        }
-        std::cout << '\n';
-    }
+
+    
+    std::cout << "Fill your matrix: " << '\n';
+    
+    mat.FillMat();
+    
 
 
     return 0;
