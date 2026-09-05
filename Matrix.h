@@ -101,7 +101,7 @@ public:
 
     Matrix<T> operator*(const Matrix &rightOp) const
     {
-        assert(this->getCols() == rightOp.getCols());
+        assert(this->cols == rightOp.getRow());
         Matrix<T> temp(this->getRow(), rightOp.getCols());
         for (int i = 0; i < temp.getRow(); i++)
         {
@@ -205,7 +205,7 @@ public:
     }
 
         // the cofactor of the matrix
-        Matrix<T> CofactorMat()
+    Matrix<T> CofactorMat()
         {
             if (this->getRow() == 2 && this->getCols() == 2)
             {
@@ -230,6 +230,45 @@ public:
                     }
                 }
                 return cofactor;
+            }
+        }
+        Matrix<T> Adjoint(){
+            if (this->rows == 2 && this->cols == 2){
+                Matrix<T> temp(2,2);
+                temp = *this;
+                temp = temp.CofactorMat();
+                temp = temp.Transpose();            
+                return temp;
+            }
+            else if (this->rows == 3 && this->cols == 3){
+                Matrix<T> temp (3,3);
+                temp = *this;
+                temp = temp.CofactorMat();
+                temp = temp.Transpose();            
+                return temp;
+            }
+
+        }
+        Matrix<T> Inverse(){
+            assert(this->Determinant() != 0 && "determinant of matrix must be different than 0 in order to be matrix inversible!");
+            if (this->rows == 2 && this->cols == 2){
+                const T invdet = static_cast<T>(1/this->Determinant());
+                Matrix<T> temp(2,2);
+                temp = *this;
+                temp = temp.CofactorMat();
+                temp = temp.Transpose();
+                temp = invdet * temp;
+                return temp;
+                
+            }
+            else if (this->rows == 3 && this->cols == 3){
+                const T invdet = static_cast<T>(1/this->Determinant());
+                Matrix<T> temp(3,3);
+                temp = *this;
+                temp = temp.CofactorMat();
+                temp = temp.Transpose();
+                temp = invdet * temp;
+                return temp;
             }
         }
 
