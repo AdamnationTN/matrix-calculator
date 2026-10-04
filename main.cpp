@@ -2,8 +2,8 @@
 #include "Matrix.h"
 
 int main()
-{
-    Matrix<double> mat(2,2);
+{ 
+    Matrix<double> mat(5,5);
     std::cout << "fill you matrix: \n";
     mat.FillMat();
     mat.showMat();
