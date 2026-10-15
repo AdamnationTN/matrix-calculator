@@ -18,7 +18,7 @@ private:
 public:
     // Initializing the Matrix object
     Matrix(int x, int y) : rows(x), cols(y), matrix(rows, std::vector<T>(cols, T{})) {
-        assert( 1 <= this->rows <= 4 && 1 <= this->cols <= 4 && "the matrix sizes of rows and cols must be between 1 to 4!");
+        assert(this->rows >= 1  && this->rows <= 4 && this->cols >= 1 && this->cols <= 4 && "the matrix sizes of rows and cols must be between 1 to 4!");
     }
 
     // Destructor
@@ -37,8 +37,8 @@ public:
     // Subscript operator overloads
     const std::vector<T> &operator[](size_t index) const { return matrix[index]; }
     std::vector<T> &operator[](size_t index) { return matrix[index]; }
-
-    void showMat() const
+    // old method printing a matrix
+    /*void showMat() const
     {
         for (int i = 0; i < rows; i++)
         {
@@ -48,7 +48,17 @@ public:
             }
             std::cout << '\n';
         }
-    }
+    }*/
+   //overloaded operator<< for printing a matrix
+   friend std::ostream& operator<< (std::ostream& out, Matrix<T> mat){
+        for(int i = 0; i < mat.getRow(); i++){
+            for(int j = 0; j < mat.getCols(); j++){
+                out << mat.getMat()[i][j] << ' ';
+            }
+            out << '\n';
+        }
+        return out;
+   };
 
     void FillMat()
     {

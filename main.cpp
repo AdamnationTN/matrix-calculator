@@ -3,13 +3,13 @@
 
 int main()
 { 
-    Matrix<double> mat(5,5);
+    Matrix<double> mat(4,4);
     std::cout << "fill you matrix: \n";
     mat.FillMat();
-    mat.showMat();
+    std::cout << mat;
     std::cout << '\n' << mat.Determinant() << '\n';
     Matrix<double> invmat (2,2);
     invmat = mat.Inverse();
-    invmat.showMat();
+    std::cout << invmat;
     return 0;
 }
