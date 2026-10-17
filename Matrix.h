@@ -50,7 +50,7 @@ public:
         }
     }*/
    //overloaded operator<< for printing a matrix
-   friend std::ostream& operator<< (std::ostream& out, Matrix<T> mat){
+   friend std::ostream& operator<< (std::ostream& out,const Matrix<T>& mat){
         for(int i = 0; i < mat.getRow(); i++){
             for(int j = 0; j < mat.getCols(); j++){
                 out << mat.getMat()[i][j] << ' ';
@@ -59,6 +59,15 @@ public:
         }
         return out;
    };
+   friend std::istream& operator>> (std::istream& in, Matrix<T>& mat){
+        for (int i = 0;i < mat.getRow() ;i++){
+            for (int j = 0; j < mat.getCols(); j++){
+                std::cout << "M[" << i+1 << "][" << j+1 << "] = ";
+                in >> mat.getMat()[i][j];
+            }
+        }
+        return in;
+   }
 
     void FillMat()
     {
