@@ -3,10 +3,11 @@
 
 int main()
 { 
-    Matrix<double> mat(2,2);
+    Matrix<double> mat(2,3);
+    Matrix<double> mat2(3,2);
     std::cout << "fill you matrix: \n";
     std::cin >> mat;
-    std::cout << mat;
-    std::cout << '\n' << mat.Determinant() << '\n';
+    std::cin >> mat2;
+    std::cout << mat * mat2;
     return 0;
 }

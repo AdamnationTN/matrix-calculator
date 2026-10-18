@@ -112,19 +112,23 @@ public:
     }
 
     // Matrix Multiplication
-    Matrix<T> operator*(Matrix &rightOp) const
+    Matrix<T> operator*(const Matrix &rightOp) const
     {
+        int l = 0,r = 0;
+        int sum;
         assert(this->cols == rightOp.getRow());
         Matrix<T> temp(this->getRow(), rightOp.getCols());
-        for (int i = 0; i < temp.getRow(); i++)
+        for (int i = 0; i < this->rows; i++)
         {
-            for (int j = 0; j < temp.getCols(); j++)
-            {
-                temp.getMat()[i][j] = T(); 
-                for (int k = 0; k < cols; k++)
+            
+            for (int j = 0; j < rightOp.getCols(); j++)
+            { sum = 0;
+                for (int k = 0; k < this->cols; k++)
                 {
-                    temp.getMat()[i][j] += this->matrix[i][k] * rightOp.getMat()[k][j];
+                    sum += this->matrix[i][k] * rightOp.getMat()[k][j];
+
                 }
+                temp.getMat()[i][j] = sum;
             }
         }
         return temp;
