@@ -114,19 +114,17 @@ public:
     // Matrix Multiplication
     Matrix<T> operator*(const Matrix &rightOp) const
     {
-        int l = 0,r = 0;
+        //int l = 0,r = 0;
         int sum;
         assert(this->cols == rightOp.getRow() && "the cols of left hand must be equal to the right hand rows!");
         Matrix<T> temp(this->getRow(), rightOp.getCols());
         for (int i = 0; i < this->rows; i++)
         {
-            
             for (int j = 0; j < rightOp.getCols(); j++)
             { sum = 0;
                 for (int k = 0; k < this->cols; k++)
                 {
                     sum += this->matrix[i][k] * rightOp.getMat()[k][j];
-
                 }
                 temp.getMat()[i][j] = sum;
             }
