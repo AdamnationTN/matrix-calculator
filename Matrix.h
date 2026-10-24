@@ -116,7 +116,7 @@ public:
     {
         int l = 0,r = 0;
         int sum;
-        assert(this->cols == rightOp.getRow());
+        assert(this->cols == rightOp.getRow() && "the cols of left hand must be equal to the right hand rows!");
         Matrix<T> temp(this->getRow(), rightOp.getCols());
         for (int i = 0; i < this->rows; i++)
         {
@@ -244,6 +244,27 @@ public:
         temp = temp.Transpose();
         temp = temp * invdet;
         return temp;
+    }
+    Matrix<T> Identity(int order){
+        if (order == 2){
+            Matrix<T> temp (order,order);
+            int j = 0;
+            for (int i = 0; i < order; i++){
+                temp.getMat()[i][j]=1;
+                j++;
+            }
+            return temp;
+        }
+        else if (order = 3){
+            Matrix<T> temp (order,order);
+            int j = 0;
+            for (int i = 0; i < order; i++){
+                temp.getMat()[i][j]=1;
+                j++;
+            }
+            return temp;
+        }
+        return Matrix<T>(0,0);
     }
 }; // <--- Correctly closing the class here
 
