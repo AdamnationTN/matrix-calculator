@@ -50,7 +50,7 @@ public:
         }
     }*/
    //overloaded operator<< for printing a matrix
-   friend std::ostream& operator<< (std::ostream& out,const Matrix<T>& mat){
+    friend std::ostream& operator<< (std::ostream& out,const Matrix<T>& mat){
         for(int i = 0; i < mat.getRow(); i++){
             for(int j = 0; j < mat.getCols(); j++){
                 out << mat.getMat()[i][j] << ' ';
@@ -59,7 +59,7 @@ public:
         }
         return out;
    };
-   friend std::istream& operator>> (std::istream& in, Matrix<T>& mat){
+    friend std::istream& operator>> (std::istream& in, Matrix<T>& mat){
         for (int i = 0;i < mat.getRow() ;i++){
             for (int j = 0; j < mat.getCols(); j++){
                 std::cout << "M[" << i+1 << "][" << j+1 << "] = ";
@@ -115,7 +115,7 @@ public:
     Matrix<T> operator*(const Matrix &rightOp) const
     {
         //int l = 0,r = 0;
-        int sum;
+        T sum{};
         assert(this->cols == rightOp.getRow() && "the cols of left hand must be equal to the right hand rows!");
         Matrix<T> temp(this->getRow(), rightOp.getCols());
         for (int i = 0; i < this->rows; i++)
@@ -243,26 +243,37 @@ public:
         temp = temp * invdet;
         return temp;
     }
-    Matrix<T> Identity(int order){
-        if (order == 2){
-            Matrix<T> temp (order,order);
-            int j = 0;
-            for (int i = 0; i < order; i++){
-                temp.getMat()[i][j]=1;
-                j++;
-            }
-            return temp;
+    Matrix<T> Identity(int order) const{
+        
+        Matrix<T> temp (order,order);
+        for (int i = 0; i < order; i++){
+            temp.getMat()[i][i]=T{1};
+            
         }
-        else if (order = 3){
-            Matrix<T> temp (order,order);
-            int j = 0;
-            for (int i = 0; i < order; i++){
-                temp.getMat()[i][j]=1;
-                j++;
-            }
-            return temp;
+        return temp;
+    }
+    bool isEigenvalue(T eigenval) const {
+        assert(this->rows == this->cols && "the matrix must be square to be eigenvalue!");
+        Matrix<T> temp(this->rows,this->rows);
+        temp = temp + (*this - (Identity(rows) * eigenval));
+        if (temp.Determinant() == 0){
+            return true;
         }
-        return Matrix<T>(0,0);
+        else{
+            return false;
+        }
+        
+    }
+    bool isEigenVec(const Matrix<T>& vectoreigen ,T eigenval) const{
+        assert(vectoreigen.getCols == 1 && isEigenvalue(eigenval) && *this.getRow() == vectoreigen.getRow() && "it must be vector and true eigenvalue to be eigenvector!");
+        Matrix<T> temp (this->getRow(),this->cols);
+        temp = temp + (*this - (Identity(rows) * eigenval));
+        if (temp.Determinant() == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }; // <--- Correctly closing the class here
 
