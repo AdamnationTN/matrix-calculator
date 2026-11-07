@@ -5,7 +5,6 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
-#include <cctype>
 
 template <typename T>
 class Matrix
@@ -69,7 +68,7 @@ public:
         return in;
    }
 
-    void FillMat()
+    void FillMat() const
     {
         for (int i = 0; i < rows; i++)
         {
@@ -160,7 +159,7 @@ public:
         return res;
     }
 
-    T Determinant()
+    T Determinant() const
     {
         assert(this->rows == this->cols && "the matrix sizes must be n x n");
         if (rows == 1 && cols == 1)
@@ -180,7 +179,7 @@ public:
         }
     }
 
-    T Minor(int i, int j, Matrix<T> &mat)
+    T Minor(int i, int j, Matrix<T> &mat) const
     {
         assert(mat.getRow() == mat.getCols() && "the matrix must be square");
         Matrix<T> minormat(mat.getRow() - 1, mat.getCols() - 1);
@@ -206,7 +205,7 @@ public:
     }
 
     // The cofactor of the matrix
-    Matrix<T> CofactorMat()
+    Matrix<T> CofactorMat() const
     {
         assert(this->getRow() == this->getCols() && "the matrix dimensions must be square!");
         Matrix<T> cofactor(this->rows, this->cols);
@@ -220,7 +219,7 @@ public:
         return cofactor;
     }
 
-    Matrix<T> Adjoint()
+    Matrix<T> Adjoint() const
     {
         if (this->rows == this->cols)
         {
@@ -233,7 +232,7 @@ public:
         return Matrix<T>(0, 0);
     }
 
-    Matrix<T> Inverse()
+    Matrix<T> Inverse() const
     {
         T det = this->Determinant();
         assert(det != 0 && "Matrix is not invertible (determinant is 0)!");
@@ -243,6 +242,8 @@ public:
         temp = temp * invdet;
         return temp;
     }
+
+
     Matrix<T> Identity(int order) const{
         
         Matrix<T> temp (order,order);
@@ -252,7 +253,8 @@ public:
         }
         return temp;
     }
-    bool isEigenvalue(T eigenval) const {
+
+    bool isEigenValue(T eigenval) const {
         assert(this->rows == this->cols && "the matrix must be square to be eigenvalue!");
         Matrix<T> temp(this->rows,this->rows);
         temp = temp + (*this - (Identity(rows) * eigenval));
@@ -264,17 +266,67 @@ public:
         }
         
     }
+    bool isNullMat() const{
+        bool test=true;
+        for(int i = 0; i < this->rows; i++){
+            for(int j = 0; j < this->cols; j++){
+                if (this->getMat()[i][j] != T{0}){
+                    test=false;
+                    break;
+                }
+            }
+        }
+        return test;
+
+    }
+
     bool isEigenVec(const Matrix<T>& vectoreigen ,T eigenval) const{
-        assert(vectoreigen.getCols == 1 && isEigenvalue(eigenval) && *this.getRow() == vectoreigen.getRow() && "it must be vector and true eigenvalue to be eigenvector!");
+        assert(vectoreigen.getCols() == 1 && isEigenValue(eigenval) && this->getRow() == vectoreigen.getRow() && "it must be vector and true eigenvalue to be eigenvector!");
         Matrix<T> temp (this->getRow(),this->cols);
-        temp = temp + (*this - (Identity(rows) * eigenval));
-        if (temp.Determinant() == 0){
+        temp = temp + (*this - (Identity(rows) * eigenval) * vectoreigen);
+        if (temp.isNullMat() == true){
             return true;
         }
         else{
             return false;
         }
     }
-}; // <--- Correctly closing the class here
 
+    bool isIdentity() const{
+        assert(this->rows == this->cols && "the matrix must be square to be identity!");
+        Matrix<T> temp(this->rows,this->cols);
+        temp = temp + (*this - Identity(this->rows));
+        if (temp.isNullMat() == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+    bool isInverse(const Matrix<T>& Inv) const{
+        assert(this->rows == this->cols && Inv.getRow()==Inv.getCols() && "the matrix must be square and the inverse must be square too!");
+        Matrix<T> temp(this->rows,this->cols);
+        temp = temp + (*this * Inv);
+        Matrix<T> temp2 (this->rows,this->cols);
+        temp2 = temp2 + (Inv*(*this));
+        
+        if (temp.isIdentity() == true && temp2.isIdentity() == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    T Trace() const{
+        assert(this->rows == this->cols && "the matrix must be square to find the Trace");
+        T Trace = T{0};
+        for (int i = 0; i < this->rows;i++){
+            Trace += this->matrix[i][i];
+        }
+        return Trace;
+    }
+
+}; // <--- Correctly closing the class here
 #endif
