@@ -319,7 +319,7 @@ public:
             return false;
         }
     }
-    T Trace() const{
+    inline T Trace() const{
         assert(this->rows == this->cols && "the matrix must be square to find the Trace");
         T Trace = T{0};
         for (int i = 0; i < this->rows;i++){
@@ -329,4 +329,62 @@ public:
     }
 
 }; // <--- Correctly closing the class here
+template<typename T>
+struct Vector3D{
+    T x, y, z;
+    inline Vector3D(T _x, T _y, T _z) : x(_x), y(_y), z(_z){};
+    inline friend std::ostream& operator<< (std::ostream& out, const Vector3D<T>& vec){
+        out << '{' << vec.x << ", " << vec.y << ", " << vec.z << '}';
+        return out;
+    }
+    inline friend std::istream& operator>> (std::istream& in, Vector3D<T>& vec){
+        std::cout << "x = ";
+        in >> vec.x;
+        std::cout << "y = ";
+        in >> vec.y;
+        std::cout << "z = ";
+        in >> vec.z;
+        return in;
+    }
+    friend Vector3D CrossProduct(const Vector3D<T>& a, const Vector3D<T>& b){};
+    T DotProduct(){
+        return (x*x+y*y+z*z);
+    }
+    inline T Magnitude(){
+        return std::sqrt(x*x+y*y+z*z);
+    }
+};
+
+
+template<typename T>
+Vector3D<T> CrossProduct (const Vector3D<T>& a, const Vector3D<T>& b){
+    T x = a.y * b.z - a.z * b.y;
+    T y = a.z * b.x - a.x * b.z;
+    T z = a.x * b.y - a.y * b.x;
+    return {x, y, z};
+}
+
+template<typename T>
+struct Vector2D{
+    T x, y;
+    inline Vector2D(T _x, T _y) : x(_x), y(_y){};
+    inline friend std::ostream& operator<< (std::ostream& out, const Vector2D<T>& vec){
+        out << '{' << vec.x << ", " << vec.y << '}';
+        return out;
+    }
+    inline friend std::istream& operator>> (std::istream& in, Vector2D<T>& vec){
+        std::cout << "x = ";
+        in >> vec.x;
+        std::cout << "y = ";
+        in >> vec.y;
+        return in;
+    }
+    inline T DotProduct() {
+        return (x * x + y * y);
+    }
+    inline T Magnitude(){
+        return std::sqrt(x*x+y*y);
+    }
+};
+
 #endif
