@@ -346,9 +346,8 @@ struct Vector3D{
         in >> vec.z;
         return in;
     }
-    friend Vector3D CrossProduct(const Vector3D<T>& a, const Vector3D<T>& b){};
-    T DotProduct(){
-        return (x*x+y*y+z*z);
+    T DotProduct(const Vector3D<T>& a, const Vector3D<T>& b){
+        return (a.x * b.x + a.y * b.y+ a.z * b.z);
     }
     inline T Magnitude(){
         return std::sqrt(x*x+y*y+z*z);
@@ -379,12 +378,15 @@ struct Vector2D{
         in >> vec.y;
         return in;
     }
-    inline T DotProduct() {
-        return (x * x + y * y);
-    }
     inline T Magnitude(){
         return std::sqrt(x*x+y*y);
     }
+    int AngleBetween2Vectors(Vector2D<T>& a,Vector2D<T>& b){
+        return acos((DotProduct(a,b))/((a.Magnitude()) * (b.Magnitude())));          
+    }
 };
-
+template <typename T>
+inline T DotProduct(const Vector2D<T>& a, const Vector2D<T>& b) {
+return (a.x * b.x + a.y * b.y);
+}
 #endif
