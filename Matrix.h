@@ -5,34 +5,35 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
-
+#include <concepts>
 template <typename T>
+
+requires std::is_arithmetic_v<T>
+
 class Matrix
 {
-private:
+    private:
     int rows;
     int cols;
     std::vector<std::vector<T>> matrix;
-
-public:
+    
+    public:
     // Initializing the Matrix object
     Matrix(int x, int y) : rows(x), cols(y), matrix(rows, std::vector<T>(cols, T{})) {
         assert(this->rows >= 1  && this->rows <= 4 && this->cols >= 1 && this->cols <= 4 && "the matrix sizes of rows and cols must be between 1 to 4!");
     }
-
-    // Destructor
-    ~Matrix() {}
-
+    
+    
     // Getting rows
     int getRow() const { return this->rows; }
 
     // Getting columns
     int getCols() const { return this->cols; }
-
+    
     // Matrix getter functions
-    std::vector<std::vector<T>> &getMat() { return this->matrix; }
-    const std::vector<std::vector<T>> &getMat() const { return this->matrix; }
-
+    std::vector<std::vector<T>> &at() { return this->matrix; }
+    const std::vector<std::vector<T>> &at() const { return this->matrix; }
+    
     // Subscript operator overloads
     const std::vector<T> &operator[](size_t index) const { return matrix[index]; }
     std::vector<T> &operator[](size_t index) { return matrix[index]; }
@@ -44,31 +45,31 @@ public:
             for (int j = 0; j < cols; j++)
             {
                 std::cout << this->matrix[i][j] << ' ';
-            }
-            std::cout << '\n';
-        }
+                }
+                std::cout << '\n';
+                }
     }*/
    //overloaded operator<< for printing a matrix
-    friend std::ostream& operator<< (std::ostream& out,const Matrix<T>& mat){
-        for(int i = 0; i < mat.getRow(); i++){
-            for(int j = 0; j < mat.getCols(); j++){
-                out << mat.getMat()[i][j] << ' ';
+   friend std::ostream& operator<< (std::ostream& out,const Matrix<T>& mat){
+       for(int i = 0; i < mat.getRow(); i++){
+           for(int j = 0; j < mat.getCols(); j++){
+               out << mat.at()[i][j] << ' ';
             }
             out << '\n';
         }
         return out;
    };
-    friend std::istream& operator>> (std::istream& in, Matrix<T>& mat){
-        for (int i = 0;i < mat.getRow() ;i++){
-            for (int j = 0; j < mat.getCols(); j++){
-                std::cout << "M[" << i+1 << "][" << j+1 << "] = ";
-                in >> mat.getMat()[i][j];
+   friend std::istream& operator>> (std::istream& in, Matrix<T>& mat){
+       for (int i = 0;i < mat.getRow() ;i++){
+           for (int j = 0; j < mat.getCols(); j++){
+               std::cout << "M[" << i+1 << "][" << j+1 << "] = ";
+               in >> mat.at()[i][j];
             }
         }
         return in;
-   }
-
-    void FillMat() const
+    }
+    
+    void FillMat()
     {
         for (int i = 0; i < rows; i++)
         {
@@ -104,12 +105,12 @@ public:
         {
             for (int j = 0; j < cols; j++)
             {
-                temp.getMat()[i][j] = this->matrix[i][j] - rightOp.matrix[i][j];
+                temp.at()[i][j] = this->matrix[i][j] - rightOp.matrix[i][j];
             }
         }
         return temp;
     }
-
+    
     // Matrix Multiplication
     Matrix<T> operator*(const Matrix &rightOp) const
     {
@@ -123,9 +124,9 @@ public:
             { sum = 0;
                 for (int k = 0; k < this->cols; k++)
                 {
-                    sum += this->matrix[i][k] * rightOp.getMat()[k][j];
+                    sum += this->matrix[i][k] * rightOp.at()[k][j];
                 }
-                temp.getMat()[i][j] = sum;
+                temp.at()[i][j] = sum;
             }
         }
         return temp;
@@ -139,12 +140,12 @@ public:
         {
             for (int j = 0; j < cols; j++)
             {
-                temp.getMat()[i][j] = this->getMat()[i][j] * scalar;
+                temp.at()[i][j] = this->at()[i][j] * scalar;
             }
         }
         return temp;
     }
-
+    
     // Transpose
     Matrix<T> Transpose() const
     {
@@ -158,7 +159,7 @@ public:
         }
         return res;
     }
-
+    
     T Determinant() const
     {
         assert(this->rows == this->cols && "the matrix sizes must be n x n");
@@ -191,7 +192,7 @@ public:
             {
                 if (!(x == i || y == j))
                 {
-                    minormat.getMat()[k][g] = mat.getMat()[x][y];
+                    minormat.at()[k][g] = mat.at()[x][y];
                     g++;
                     if (g == minormat.getCols())
                     {
@@ -213,12 +214,12 @@ public:
         {
             for (int j = 0; j < this->cols; j++)
             {
-                cofactor.getMat()[i][j] = static_cast<T>(std::pow(-1, i + j)) * Minor(i, j, *this);
+                cofactor.at()[i][j] = static_cast<T>(std::pow(-1, i + j)) * Minor(i, j, *this);
             }
         }
         return cofactor;
     }
-
+    
     Matrix<T> Adjoint() const
     {
         if (this->rows == this->cols)
@@ -231,7 +232,7 @@ public:
         }
         return Matrix<T>(0, 0);
     }
-
+    
     Matrix<T> Inverse() const
     {
         T det = this->Determinant();
@@ -242,18 +243,18 @@ public:
         temp = temp * invdet;
         return temp;
     }
-
-
+    
+    
     Matrix<T> Identity(int order) const{
         
         Matrix<T> temp (order,order);
         for (int i = 0; i < order; i++){
-            temp.getMat()[i][i]=T{1};
+            temp.at()[i][i]=T{1};
             
         }
         return temp;
     }
-
+    
     bool isEigenValue(T eigenval) const {
         assert(this->rows == this->cols && "the matrix must be square to be eigenvalue!");
         Matrix<T> temp(this->rows,this->rows);
@@ -270,14 +271,14 @@ public:
         bool test=true;
         for(int i = 0; i < this->rows; i++){
             for(int j = 0; j < this->cols; j++){
-                if (this->getMat()[i][j] != T{0}){
+                if (this->at()[i][j] != T{0}){
                     test=false;
                     break;
                 }
             }
         }
         return test;
-
+        
     }
 
     bool isEigenVec(const Matrix<T>& vectoreigen ,T eigenval) const{
@@ -291,7 +292,7 @@ public:
             return false;
         }
     }
-
+    
     bool isIdentity() const{
         assert(this->rows == this->cols && "the matrix must be square to be identity!");
         Matrix<T> temp(this->rows,this->cols);
@@ -304,7 +305,7 @@ public:
         }
 
     }
-
+    
     bool isInverse(const Matrix<T>& Inv) const{
         assert(this->rows == this->cols && Inv.getRow()==Inv.getCols() && "the matrix must be square and the inverse must be square too!");
         Matrix<T> temp(this->rows,this->cols);
@@ -327,66 +328,6 @@ public:
         }
         return Trace;
     }
-
+    
 }; // <--- Correctly closing the class here
-template<typename T>
-struct Vector3D{
-    T x, y, z;
-    inline Vector3D(T _x, T _y, T _z) : x(_x), y(_y), z(_z){};
-    inline friend std::ostream& operator<< (std::ostream& out, const Vector3D<T>& vec){
-        out << '{' << vec.x << ", " << vec.y << ", " << vec.z << '}';
-        return out;
-    }
-    inline friend std::istream& operator>> (std::istream& in, Vector3D<T>& vec){
-        std::cout << "x = ";
-        in >> vec.x;
-        std::cout << "y = ";
-        in >> vec.y;
-        std::cout << "z = ";
-        in >> vec.z;
-        return in;
-    }
-    T DotProduct(const Vector3D<T>& a, const Vector3D<T>& b){
-        return (a.x * b.x + a.y * b.y+ a.z * b.z);
-    }
-    inline T Magnitude(){
-        return std::sqrt(x*x+y*y+z*z);
-    }
-};
-
-
-template<typename T>
-Vector3D<T> CrossProduct (const Vector3D<T>& a, const Vector3D<T>& b){
-    T x = a.y * b.z - a.z * b.y;
-    T y = a.z * b.x - a.x * b.z;
-    T z = a.x * b.y - a.y * b.x;
-    return {x, y, z};
-}
-
-template<typename T>
-struct Vector2D{
-    T x, y;
-    inline Vector2D(T _x, T _y) : x(_x), y(_y){};
-    inline friend std::ostream& operator<< (std::ostream& out, const Vector2D<T>& vec){
-        out << '{' << vec.x << ", " << vec.y << '}';
-        return out;
-    }
-    inline friend std::istream& operator>> (std::istream& in, Vector2D<T>& vec){
-        std::cout << "x = ";
-        in >> vec.x;
-        std::cout << "y = ";
-        in >> vec.y;
-        return in;
-    }
-    inline T Magnitude(){
-        return std::sqrt(x*x+y*y);
-    }
-    int AngleBetween2Vectors(Vector2D<T>& a,Vector2D<T>& b){
-        return acos((DotProduct(a,b))/((a.Magnitude()) * (b.Magnitude())));          
-    }
-};
-template <typename T>
-inline T DotProduct(const Vector2D<T>& a, const Vector2D<T>& b) {
-return (a.x * b.x + a.y * b.y);
-}
 #endif
