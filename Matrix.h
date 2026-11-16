@@ -1,6 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <type_traits>
 #include <cassert>
 #include <cmath>
 #include <vector>
@@ -160,7 +161,7 @@ class Matrix
         return res;
     }
     
-    T Determinant() const
+    T Determinant() const requires std::floating_point<T>
     {
         assert(this->rows == this->cols && "the matrix sizes must be n x n");
         if (rows == 1 && cols == 1)
@@ -180,7 +181,7 @@ class Matrix
         }
     }
 
-    T Minor(int i, int j, Matrix<T> &mat) const
+    T Minor(int i, int j, const Matrix<T> &mat) const
     {
         assert(mat.getRow() == mat.getCols() && "the matrix must be square");
         Matrix<T> minormat(mat.getRow() - 1, mat.getCols() - 1);
@@ -222,19 +223,17 @@ class Matrix
     
     Matrix<T> Adjoint() const
     {
-        if (this->rows == this->cols)
-        {
-            Matrix<T> temp(this->rows, this->cols);
-            temp = *this;
-            temp = temp.CofactorMat();
-            temp = temp.Transpose();
-            return temp;
-        }
-        return Matrix<T>(0, 0);
+        assert(this->rows == this->cols && "the matrix must be square!");
+        Matrix<T> temp(this->rows, this->cols);
+        temp = *this;
+        temp = temp.CofactorMat();
+        temp = temp.Transpose();
+        return temp;
     }
     
-    Matrix<T> Inverse() const
+    Matrix<T> Inverse() const requires std::floating_point<T>
     {
+
         T det = this->Determinant();
         assert(det != 0 && "Matrix is not invertible (determinant is 0)!");
         T invdet = static_cast<T>(1.0 / det);
@@ -246,11 +245,9 @@ class Matrix
     
     
     Matrix<T> Identity(int order) const{
-        
         Matrix<T> temp (order,order);
         for (int i = 0; i < order; i++){
             temp.at()[i][i]=T{1};
-            
         }
         return temp;
     }
@@ -284,7 +281,7 @@ class Matrix
     bool isEigenVec(const Matrix<T>& vectoreigen ,T eigenval) const{
         assert(vectoreigen.getCols() == 1 && isEigenValue(eigenval) && this->getRow() == vectoreigen.getRow() && "it must be vector and true eigenvalue to be eigenvector!");
         Matrix<T> temp (this->getRow(),this->cols);
-        temp = temp + (*this - (Identity(rows) * eigenval) * vectoreigen);
+        temp = temp + ((*this - (Identity(rows) * eigenval)) * vectoreigen);
         if (temp.isNullMat() == true){
             return true;
         }

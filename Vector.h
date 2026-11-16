@@ -40,7 +40,9 @@ Vector3D<T> CrossProduct (const Vector3D<T>& a, const Vector3D<T>& b){
 }
 
 template<typename T>
+
 requires std::is_arithmetic_v<T>
+
 struct Vector2D{
     T x, y;
     inline Vector2D(T _x, T _y) : x(_x), y(_y){};
@@ -61,9 +63,10 @@ struct Vector2D{
     int AngleBetween2Vectors(Vector2D<T>& a,Vector2D<T>& b){
         return acos((DotProduct(a,b))/((a.Magnitude()) * (b.Magnitude())));          
     }
+    friend inline T DotProduct(const Vector2D<T>& a, const Vector2D<T>& b){};
 };
 template <typename T>
 inline T DotProduct(const Vector2D<T>& a, const Vector2D<T>& b) {
-return (a.x * b.x + a.y * b.y);
+            return (a.x * b.x + a.y * b.y);
 }
 #endif
