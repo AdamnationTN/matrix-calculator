@@ -6,6 +6,7 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
+#include <stdexcept>
 #include <concepts>
 template <typename T>
 
@@ -20,8 +21,9 @@ class Matrix
     
     public:
     // Initializing the Matrix object
-    Matrix(int x, int y) : rows(x), cols(y), matrix(rows, std::vector<T>(cols, T{})) {
-        assert(this->rows >= 1  && this->rows <= 4 && this->cols >= 1 && this->cols <= 4 && "the matrix sizes of rows and cols must be between 1 to 4!");
+    Matrix(int x, int y) : rows(x), cols(y) {
+        assert(rows > 0 && cols > 0 && "The matrix dimenstions must not to be negative or null");
+        matrix.resize(rows, std::vector<T>(cols, T{}));
     }
     
     
@@ -70,7 +72,7 @@ class Matrix
         return in;
     }
     
-    void FillMat()
+    /*void FillMat()
     {
         for (int i = 0; i < rows; i++)
         {
@@ -81,7 +83,7 @@ class Matrix
             }
         }
     }
-
+    */
     // Matrix Addition
     Matrix<T> operator+(const Matrix &rightOp) const
     {
@@ -183,7 +185,7 @@ class Matrix
 
     T Minor(int i, int j, const Matrix<T> &mat) const
     {
-        assert(mat.getRow() == mat.getCols() && "the matrix must be square");
+        assert(mat.getRow() == mat.getCols() && i < mat.getRow() && j < mat.getCols() && "the matrix must be square and its indexs not to be outside boundiaries and must be in rows and cols range");
         Matrix<T> minormat(mat.getRow() - 1, mat.getCols() - 1);
         int k = 0;
         int g = 0;

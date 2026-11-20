@@ -1,14 +1,11 @@
 #include <iostream>
 #include "Matrix.h"
+#include <string>
 #include "Vector.h"
-
 int main()
-{ 
-    Matrix<float> mat(2,2);
-    std::cin >> mat;
-    std::cout << mat.Inverse() << '\n';
-    std::cout << mat.Transpose() << '\n';
-    std::cout << mat.isNullMat() << '\n';
-    std::cout << mat.Minor(0,0,mat);
+{   
+    Vector3D<int> vec1(1,0,0);
+    Vector3D<int> vec2(0,1,0);
+    std::cout << vec1.AngleBetween2Vectors(vec1,vec2);
     return 0;
 }
